@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<SimBase.Document Type="InGamePanels" version="1,0">
+  <Filename>InGamePanel_Advanced_Vfr_Map.spb</Filename>
+  <InGamePanels.InGamePanelDefinition id="PANEL_ADVANCED_VFR_MAP" Name="Advanced VFR Map" url="html_UI/ingamePanels/CustomPanel/CustomPanel.html" resizeDirections="Both" minWidth="33" minHeight="35" defaultWidth="36" defaultHeight="36" defaultTop="33" defaultRight="2" icon="ICON_TOOLBAR" buttonVisible="true">
+  </InGamePanels.InGamePanelDefinition>
+</SimBase.Document>

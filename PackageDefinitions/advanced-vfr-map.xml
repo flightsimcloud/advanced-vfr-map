@@ -1,0 +1,23 @@
+<AssetPackage Name="advanced-vfr-map" Version="0.1.0">
+	<ItemSettings>
+		<ContentType>CORE</ContentType>
+		<Title>Advanced VFR Map</Title>
+		<Manufacturer>https://flightsim.cloud</Manufacturer>
+		<Creator>https://flightsim.cloud</Creator>
+	</ItemSettings>
+	<Flags>
+		<VisibleInStore>false</VisibleInStore>
+		<CanBeReferenced>false</CanBeReferenced>
+	</Flags>
+	<AssetGroups>
+		<AssetGroup Name="advanced-vfr-map">
+			<Type>SPB</Type>
+			<Flags>
+				<FSXCompatibility>false</FSXCompatibility>
+			</Flags>
+			<AssetDir>PackageDefinitions\src\</AssetDir>
+			<OutputDir>InGamePanels\</OutputDir>
+		</AssetGroup>
+	</AssetGroups>
+</AssetPackage>
+

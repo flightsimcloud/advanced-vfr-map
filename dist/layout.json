@@ -1,0 +1,29 @@
+{
+    "content": [
+        {
+            "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.css",
+            "size": 1538,
+            "date": 132516486720000000
+        },
+        {
+            "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.html",
+            "size": 1712,
+            "date": 132517493944452970
+        },
+        {
+            "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.js",
+            "size": 4257,
+            "date": 132517499812299188
+        },
+        {
+            "path": "html_ui/Textures/Menu/toolbar/ICON_TOOLBAR.svg",
+            "size": 5745,
+            "date": 132516486720000000
+        },
+        {
+            "path": "InGamePanels/advanced-vfr-map.spb",
+            "size": 671,
+            "date": 132518090000882030
+        }
+    ]
+}
