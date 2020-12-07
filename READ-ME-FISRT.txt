@@ -1,0 +1,21 @@
+IMPORTANT
+---------
+
+If you don't want to appear as "JohnDoe" on map, you have to set your name.
+
+To do so:
+- open advanced-vfr-map/html_ui/InGamePanels/CustomPanel/CustomPanel.js
+- at the begining of the file you will see:
+
+    // Set your ID/name
+    const senderID = 'johnDoe'
+
+- change JohnDoe by the name you want.
+
+Note: avoid special chars and do note user more the 12 chars lenght.
+
+INSTALLATION
+------------
+Just drag and drop "advanced-vfr-map" folder to your community folder.
+
+Note for fsBlackBox users: you don't need to launch fsBlackBox to see your plane on map.

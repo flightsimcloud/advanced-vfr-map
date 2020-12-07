@@ -1,7 +1,12 @@
-const groupName = 'global'
+// Set your ID/name
+const senderID = 'johnDoe'
+
+//////////////////////////////////////////////////////
+// Do not edit after
+/////////////////////////////////////////////////////
 
 
-var IngamePanelCustomPanelLoaded = false;
+let IngamePanelCustomPanelLoaded = false;
 
 const atcModelDic = {
     "TT:ATCCOM.AC_MODEL_A20N.0.text": "A320neo",
@@ -38,8 +43,8 @@ document.addEventListener('beforeunload', function () {
 }, false);
 
 const sessionID = Date.now()
-const senderID = 'toorop'
-const appID = 'dev-toorop-ben'
+const groupName = 'global'
+//const appID = 'advanced-vfr-map'
 //const serverUrl = 'wss://flightsim.cloud/d/map/test'
 const serverUrl = 'wss://flightsim.cloud/d/ws/telemetryIn'
 //const serverUrl = 'ws://192.168.1.20:1337'
@@ -47,14 +52,14 @@ const serverUrl = 'wss://flightsim.cloud/d/ws/telemetryIn'
 class IngamePanelCustomPanel extends HTMLElement {
     constructor() {
         super();
-        var iframe = document.querySelector("#CustomPanelIframe");
+         let iframe = document.querySelector("#CustomPanelIframe");
         if (iframe) {
             iframe.src = "https://flightsim.cloud/map/global?ingame";
         }
     }
 
     connectedCallback() {
-        var self = this;
+        let self = this;
         this.socket = new WebSocket(serverUrl)
         this.socket.onopen = () => {
             // prevent null/0 data
@@ -62,7 +67,7 @@ class IngamePanelCustomPanel extends HTMLElement {
                 this.updatePos()
             }, 1000)
         }
-        var iframe = document.querySelector("#CustomPanelIframe");
+        let iframe = document.querySelector("#CustomPanelIframe");
         if (iframe) {
             iframe.src = "https://flightsim.cloud/map/global?ingame";            
         }
