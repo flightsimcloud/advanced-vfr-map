@@ -12,18 +12,13 @@
         },
         {
             "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.js",
-            "size": 4259,
-            "date": 132518203274330048
+            "size": 4223,
+            "date": 132518960146508658
         },
         {
             "path": "html_ui/Textures/Menu/toolbar/ICON_TOOLBAR.svg",
             "size": 546,
-            "date": 132518326308950084
-        },
-        {
-            "path": "html_ui/Textures/Menu/toolbar/vectorpaint.svg",
-            "size": 691,
-            "date": 132518324168382196
+            "date": 132518330469048328
         },
         {
             "path": "InGamePanels/advanced-vfr-map.spb",

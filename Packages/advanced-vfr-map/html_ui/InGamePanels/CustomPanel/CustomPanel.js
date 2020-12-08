@@ -1,5 +1,5 @@
-// Set your ID/name
-const senderID = 'johnDoe'
+// Set your name
+let userName = ''
 
 //////////////////////////////////////////////////////
 // Do not edit after
@@ -36,25 +36,28 @@ const atcModelDic = {
     "TT:ATCCOM.AC_MODEL_TBM9.0.text": "TBM 930",
 };
 
-
+const version = "0.1.0"
+const sessionID = Date.now()
+const groupName = 'global'
+const serverUrl = 'wss://flightsim.cloud/d/ws/telemetryIn'
+const iframeSrc = `https://flightsim.cloud/map/global?ingame&v=${version}`
+let senderID = userName
+if (senderID === '') {
+    senderID = Math.random().toString(36).substring(2, 10)
+} else if (senderID.length > 10) {
+    senderID = senderID.substring(0, 9)
+}
 
 document.addEventListener('beforeunload', function () {
     IngamePanelCustomPanelLoaded = false;
 }, false);
 
-const sessionID = Date.now()
-const groupName = 'global'
-//const appID = 'advanced-vfr-map'
-//const serverUrl = 'wss://flightsim.cloud/d/map/test'
-const serverUrl = 'wss://flightsim.cloud/d/ws/telemetryIn'
-//const serverUrl = 'ws://192.168.1.20:1337'
-
 class IngamePanelCustomPanel extends HTMLElement {
     constructor() {
         super();
-         let iframe = document.querySelector("#CustomPanelIframe");
+        let iframe = document.querySelector("#CustomPanelIframe");
         if (iframe) {
-            iframe.src = "https://flightsim.cloud/map/global?ingame";
+            iframe.src = iframeSrc;
         }
     }
 
@@ -69,44 +72,35 @@ class IngamePanelCustomPanel extends HTMLElement {
         }
         let iframe = document.querySelector("#CustomPanelIframe");
         if (iframe) {
-            iframe.src = "https://flightsim.cloud/map/global?ingame";            
+            iframe.src = iframeSrc;
         }
     }
 
-    updateImage() {
-    }
 
     updatePos() {
-               
         let atcModel = SimVar.GetSimVarValue("ATC MODEL", "string", "FMC");
-        if (atcModelDic[atcModel]) { atcModel = atcModelDic[atcModel] };
+        if (atcModelDic[atcModel]) atcModel = atcModelDic[atcModel];
 
         const atcId = SimVar.GetSimVarValue("ATC ID", "string", "FMC");
         const atcAirline = SimVar.GetSimVarValue("ATC AIRLINE", "string");
 
         const atcFlightNumber = SimVar.GetSimVarValue("ATC FLIGHT NUMBER", "string");
 
-        const lat = SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude"); 
-       
-        const lng = SimVar.GetSimVarValue("PLANE LONGITUDE", "degree longitude"); 
-       
-        let alt = SimVar.GetSimVarValue("PLANE ALTITUDE", "feet"); 
-        if (alt) { alt = alt.toFixed(2) };
-       
+        const lat = SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude");
+
+        const lng = SimVar.GetSimVarValue("PLANE LONGITUDE", "degree longitude");
+
+        let alt = SimVar.GetSimVarValue("PLANE ALTITUDE", "feet");
+        if (alt) alt = alt.toFixed(2)
+
         let hdg = SimVar.GetSimVarValue("PLANE HEADING DEGREES TRUE", "degree");
         //if (hdg) { hdg = hdg.toFixed(5) };
 
-        const speed = SimVar.GetSimVarValue("AIRSPEED INDICATED", "knots"); 
-        let vspeed = SimVar.GetSimVarValue("VERTICAL SPEED", "Feet per second"); 
-        if (vspeed) {vspeed = vspeed.toFixed(2)};
-
+        const speed = SimVar.GetSimVarValue("AIRSPEED INDICATED", "knots");
+        let vspeed = SimVar.GetSimVarValue("VERTICAL SPEED", "Feet per second");
+        if (vspeed) vspeed = vspeed.toFixed(2)
 
         const data = {
-            /*type: 'fd',
-            senderID,
-            appID,
-            sessionID,
-            flightData: {*/
             user: senderID,
             group: groupName,
             lng: lng,
@@ -120,13 +114,8 @@ class IngamePanelCustomPanel extends HTMLElement {
             atcFlightNumber,
             speed,
             vspeed,
-            //}
         }
-
-        //console.log(data)
-
         this.socket.send(JSON.stringify(data))
-
         setTimeout(() => {
             this.updatePos()
         }, 1000)
@@ -134,5 +123,6 @@ class IngamePanelCustomPanel extends HTMLElement {
 
 
 }
+
 window.customElements.define("ingamepanel-custom", IngamePanelCustomPanel);
 checkAutoload();

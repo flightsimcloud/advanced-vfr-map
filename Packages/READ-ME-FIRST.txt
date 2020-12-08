@@ -1,0 +1,23 @@
+INSTALLATION
+------------
+Just drag and drop "advanced-vfr-map" folder to your community folder.
+
+Note for fsBlackBox users: you don't need to launch fsBlackBox to see your plane on map.
+
+IMPORTANT
+---------
+
+If you don't want to appear with a random name on the map, you have to set it:
+
+- open advanced-vfr-map/html_ui/InGamePanels/CustomPanel/CustomPanel.js
+- at the begining of the file you will see:
+
+    // Set your name
+    let userName = ''
+
+- Enter your name between ''. Example:
+    // Set your name
+    let userName = 'Toorop'
+
+
+Note: avoid special chars and do note use more the 12 chars lenght.
