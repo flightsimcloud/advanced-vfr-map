@@ -33,18 +33,25 @@ const atcModelDic = {
 	"TT:ATCCOM.AC_MODEL_TBM9.0.text": "TBM 930"
 }
 
+const debug = false
 const version = "0.2.0"
-const sessionID = Date.now()
+const sessionID = debug ? 1234 : Date.now()
 const groupName = 'global'
 
+const localIp = '192.168.1.20'
+if(debug) userName = 'crazyDev'
+
 const iframePath = `/map/${groupName}?ingame&v=${version}&session=${sessionID}`
-const iframeUrl = `http://192.168.1.20:8080${iframePath}`
+const iFrameServer = debug ? `http://${localIp}:8080` : 'https://flightsim.cloud'
+const iframeUrl = iFrameServer + iframePath
 
 const telemetryPath = '/d/ws/telemetryIn'
-const telemetryUrl = `ws://192.168.1.20:1816${telemetryPath}`
+const telemetryServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
+const telemetryUrl = telemetryServer + telemetryPath
 
-const linkerPath = '/d/ws/linker/pben'
-const linkerUrl = `ws://192.168.1.20:1816${linkerPath}`
+const linkerPath = '/d/ws/linker/p' + sessionID
+const linkerServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
+const linkerUrl = linkerServer + linkerPath
 
 let senderID = userName
 if(senderID === ''){
@@ -82,7 +89,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 	}
 
 	openiFrame(){
-		console.log('Open iFrame')
+		console.log('Open iFrame', iframeUrl)
 		let iframe = document.querySelector("#CustomPanelIframe")
 		if(iframe) iframe.src = iframeUrl
 	}
