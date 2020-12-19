@@ -5,6 +5,7 @@
 /** This mixin makes a single line element fit exactly on the Roboto font for easier integration. */
 ingame-ui#CustomPanel {
   --headerSize: calc(var(--screenHeight) * (75px / 2160));
+
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -14,71 +15,81 @@ ingame-ui#CustomPanel {
   /*border: 2px solid blue !important;*/
 }
 
-ingame-ui#CustomPanel #CustomPanelWrap {
-  display: flex;
-  flex-direction: column;
-  width: 100% !important;
-  /*height: 100% !important;*/
-  height: calc(100% - var(--headerSize) * 2);
-  /*border: 2px solid red !important;*/
-  /*min-height: 0;
-  min-width: 0;*/
-  overflow:hidden;
-  align-items: stretch !important;
-  flex: 1 1 auto !important;
-}
+  ingame-ui#CustomPanel #CustomPanelWrap {
+    --paddingSize: calc(var(--screenHeight) * (20px / 2160));
 
-ingame-ui#CustomPanel #CustomPanelWrap iframe {
-  border: 2px solid red !important;
-  /*border: none !important;*/
-  height: 100%;
-  width: 100%;
-}
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    /*height: 100% !important;*/
+    height: calc(100% - var(--headerSize) * 2);
+    /*border: 2px solid red !important;*/
+    /*min-height: 0;
+    min-width: 0;*/
+    overflow:hidden;
+    align-items: stretch !important;
+    flex: 1 1 auto !important;
+  }
 
-ingame-ui#CustomPanel .ingameUiContent {
-  /*border: 2px solid green !important;*/
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  min-width: 0 !important;
-  overflow:hidden !important;
-  align-items: stretch !important;
-  flex: 1 1 auto !important;
-}
+    ingame-ui#CustomPanel #CustomPanelWrap #user-settings {
+      padding: var(--paddingSize);
+      color: #000;
+    }
+      ingame-ui#CustomPanel #CustomPanelWrap #user-settings .field-item{
+        margin-bottom: var(--paddingSize);
+      }
 
-ingame-ui#CustomPanel .ingameUiWrapper {
-  /*border: 2px solid yellow !important;*/
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  height: calc(100% - 30px) !important;
-  min-height: 0 !important;
-  min-width: 0 !important;
-  overflow:hidden !important;
-  align-items: stretch !important;
-  flex: 1 1 auto !important;
-}
+    ingame-ui#CustomPanel #CustomPanelWrap iframe {
+      border: none !important;
+      height: 100%;
+      width: 100%;
+    }
 
-ingame-ui#CustomPanel #Footer{
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: row;
-  font-size: var(--fontSizePragraph);
-  text-transform: uppercase;
-  background-color: rgba(0, 0, 0, 0.75);
-  width: 100%;
-  min-height: var(--headerSize);
-  height: var(--headerSize);
-  max-height: var(--headerSize);
-}
+  ingame-ui#CustomPanel .ingameUiContent {
+    /*border: 2px solid green !important;*/
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow:hidden !important;
+    align-items: stretch !important;
+    flex: 1 1 auto !important;
+  }
 
-ingame-ui#CustomPanel #Footer .text{
-  font-weight: bold;
-}
+  ingame-ui#CustomPanel .ingameUiWrapper {
+    /*border: 2px solid yellow !important;*/
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: calc(100% - 30px) !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow:hidden !important;
+    align-items: stretch !important;
+    flex: 1 1 auto !important;
+  }
 
-ingame-ui#CustomPanel #Footer .text{
-  font-weight: bold;
-}
+  ingame-ui#CustomPanel #Footer{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    font-size: var(--fontSizePragraph);
+    text-transform: uppercase;
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100%;
+    min-height: var(--headerSize);
+    height: var(--headerSize);
+    max-height: var(--headerSize);
+  }
 
+    ingame-ui#CustomPanel #Footer #debug{
+      align-self: center;
+      margin-right: 40px;
+      text-transform: none;
+    }
+
+    ingame-ui#CustomPanel #Footer .text{
+      font-weight: bold;
+    }
