@@ -28,12 +28,12 @@ const atcModelDic = {
 
 const debug = true
 const version = '0.3.0'
-const groupName = debug ? 'dev' : 'global'
+const groupName = debug ? 'global' : 'global'
 const localIp = '192.168.1.20'
 
 const iFrameServer = debug ? `http://${localIp}:8080` : 'https://flightsim.cloud'
 const linkerServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
-const telemetryServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
+const telemetryServer = false ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
 
 let IngamePanelCustomPanelLoaded = false
 document.addEventListener('beforeunload', () => {
@@ -41,6 +41,7 @@ document.addEventListener('beforeunload', () => {
 }, false)
 
 class IngamePanelCustomPanel extends HTMLElement {
+
 	constructor(){
 		super()
 
@@ -84,26 +85,23 @@ class IngamePanelCustomPanel extends HTMLElement {
 		this.updateUi()
 
 		// Reload the user from Storage when ready
-		RegisterViewListener('JS_LISTENER_DATASTORAGE', () => {
-			console.log('JS_LISTENER_DATASTORAGE: ready')
+		RegisterViewListener('JS_LISTENER_DATASTORAGE', () => this.onDataStoreReady())
+	}
 
-			const user = this.getUser()
-			console.log(user)
+	onDataStoreReady(){
+		const user = this.getUser()
 
-			if(!user){
-				console.log('No user in the store => open settings')
-				this.openSettings()
-				return
-			}
-
+		if(user){
 			// Save globally
-			console.log('Save the user globally')
 			this.user = user
 
 			// Open the map (the user exists)
 			console.log('User exists, load the map')
 			this.setView('map')
-		})
+		}else{
+			console.log('No user in the store => open settings')
+			this.openSettings()
+		}
 
 		// Start sockets
 		this.telemetryConnection()
@@ -112,12 +110,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 
 	getUser(){
 		const user = GetStoredData('adv_vfr_user')
-		console.log('Raw store user')
-		console.log(user)
-
 		if(user) return JSON.parse(user)
-
-		console.log('Pas de user dans le store')
 
 		return {
 			name: ''
@@ -125,11 +118,11 @@ class IngamePanelCustomPanel extends HTMLElement {
 	}
 
 	saveUser(){
-		const user = {
+		this.user = Object.assign({}, this.user, {
 			name: this.i_userName.value
-		}
+		})
 
-		const value = JSON.stringify(user)
+		const value = JSON.stringify(this.user)
 		SetStoredData('adv_vfr_user', value)
 	}
 
@@ -175,7 +168,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 	openiFrame(){
 		if(!this.iframe) return
 
-		const url =  iFrameServer + `/map/${groupName}?ingame&__v=${version}&session=${this.sessionID}&key=${this.key}`
+		const url = iFrameServer + `/map/${groupName}?ingame&__v=${version}&session=${this.sessionID}&key=${this.key}`
 		console.log('Open iFrame', url)
 
 		this.iframe.src = url
@@ -190,14 +183,18 @@ class IngamePanelCustomPanel extends HTMLElement {
 		this.iframe.style.display = 'none'
 	}
 
+
+
 	/**
-	 * # Telemetry
-	 *
-	 * La telemetry envois la position de l'avion au server via un WebSocket `telemetryUrl`
-	 * on ne fait que publier sur ce canal de communication
+	 * Telemetry
+	 * ------
+	 * Telemetry socket sned plane/user position to the main server using a WebSocket
+	 * We only use this channel to pubish data
 	 */
 
 	telemetryConnection(){
+		if(this.telemetry) return
+
 		const url = telemetryServer + '/d/ws/telemetryIn'
 
 		console.log('Connecting to Telemetry socket...', url)
@@ -209,26 +206,25 @@ class IngamePanelCustomPanel extends HTMLElement {
 	}
 
 	telemetryOnOpen(){
-		this.openiFrame()
-
-		// prevent null/0 data
-		setTimeout(() => this.updatePos(), 1000)
+		if(this.pushPos) clearInterval(this.pushPos)
+		this.pushPos = setInterval(() => this.updatePos(), 1000)
 	}
 
 	telemetryOnError(error){
 		console.log('TELEMETRY ERROR')
-		console.error(error)
+		console.log(error)
 	}
 
 	telemetryOnClose(){
-		console.log('TELEMETRY CLOSED, retry in 1s')
-		setTimeout(this.telemetryConnection, 1000)
+		console.log('TELEMETRY CLOSED, retry in 3s')
+		setTimeout(() => this.telemetryConnection(), 3000)
 	}
 
 	updatePos(){
 
 		let atcModel = SimVar.GetSimVarValue("ATC MODEL", "string", "FMC")
-		if(atcModelDic[atcModel]) atcModel = atcModelDic[atcModel]
+		let atcModelHuman = atcModel
+		if(atcModelDic[atcModel]) atcModelHuman = atcModelDic[atcModel]
 
 		const atcId = SimVar.GetSimVarValue("ATC ID", "string", "FMC")
 		const atcAirline = SimVar.GetSimVarValue("ATC AIRLINE", "string")
@@ -257,12 +253,14 @@ class IngamePanelCustomPanel extends HTMLElement {
 			hidden: this.planeHidden,
 			user: userName,
 			group: groupName,
-			lng: lng,
+			uuid: this.sessionID,
+			atcModelRaw: atcModel,
+			atcModel: atcModelHuman,
+			// ---
+			lng,
 			lat,
 			alt,
 			hdg,
-			uuid: this.sessionID,
-			atcModel,
 			atcId,
 			atcAirline,
 			atcFlightNumber,
@@ -271,20 +269,22 @@ class IngamePanelCustomPanel extends HTMLElement {
 		}
 
 		//console.log('Update pos', data)
-
 		this.telemetry.send(JSON.stringify(data))
-
-		setTimeout(() => this.updatePos(), 1000)
 	}
+
+
 
 	/***
 	 * Linker
 	 * ------
-	 * Le linker fait le lien entre le panel et la iframe, c'est une communication limitée à un utilisateur
-	 * Ce canal permet à la iFrame de recevoir des données du jeu (Coherent / SimVar ...) sans devoir changer le Panel
+	 * Linker is used to create a communication channel between the iframe and this panel. Therefor we can send action
+	 * from the iFrame to the panel and access Coherent or Simvar without building a new version of the panel
+	 * This is strictly limited to a single user
 	 */
 
 	linkerConnection(){
+		if(this.linker) return
+
 		const url = linkerServer + '/d/ws/linker/p' + this.key
 		console.log('Connecting to Linker socket...', url)
 
@@ -306,8 +306,8 @@ class IngamePanelCustomPanel extends HTMLElement {
 	}
 
 	linkerOnClose(){
-		console.log('LINKER CLOSED, retry in 1s')
-		setTimeout(this.linkerConnection, 1000)
+		console.log('LINKER CLOSED, retry in 3s')
+		setTimeout(() => this.linkerConnection(), 3000)
 	}
 
 	linkerOnMessage(msg){
