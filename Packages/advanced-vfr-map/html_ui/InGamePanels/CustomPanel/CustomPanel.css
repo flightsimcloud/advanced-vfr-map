@@ -31,14 +31,6 @@ ingame-ui#CustomPanel {
     flex: 1 1 auto !important;
   }
 
-    ingame-ui#CustomPanel #CustomPanelWrap #user-settings {
-      padding: var(--paddingSize);
-      color: #000;
-    }
-      ingame-ui#CustomPanel #CustomPanelWrap #user-settings .field-item{
-        margin-bottom: var(--paddingSize);
-      }
-
     ingame-ui#CustomPanel #CustomPanelWrap iframe {
       border: none !important;
       height: 100%;

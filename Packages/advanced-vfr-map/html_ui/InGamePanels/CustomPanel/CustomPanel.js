@@ -45,18 +45,22 @@ class IngamePanelCustomPanel extends HTMLElement {
 	constructor(){
 		super()
 
-		this.view = ''
 		this.planeHidden = false
+		this.subscribers = {}
 
-		this.sessionID = debug ? 123 : Date.now()
-		this.key = debug ? '456' : Math.random().toString(36).substring(2, 10)
+		this.sessionID = debug ? 111 : Date.now()
+		this.key = debug ? '444' : Math.random().toString(36).substring(2, 10)
 		this.randomName = Math.random().toString(36).substring(2, 10)
+		this.userName = null
 
-		this.user = {}
+		this.state = {}
 	}
 
 	connectedCallback(){
 		console.log('connectedCallback')
+
+		console.log('Start Linker socket')
+		this.linkerConnection()
 
 		this.m_toggleHidden = this.querySelector("#ToggleHidden")
 		if(this.m_toggleHidden){
@@ -64,126 +68,60 @@ class IngamePanelCustomPanel extends HTMLElement {
 			this.m_toggleHidden.addEventListener("OnValidate", this.toggleHidden.bind(this))
 		}
 
-		this.m_toggleSettings = this.querySelector("#ToggleSettings")
-		if(this.m_toggleSettings){
-			this.m_toggleSettings.toggled = false
-			this.m_toggleSettings.addEventListener("OnValidate", this.toggleSettings.bind(this))
-		}
-
-		// Views
-		this.viewUserSettings = this.querySelector('#user-settings')
-		this.iframe = document.querySelector("#CustomPanelIframe")
-
-		// Settings
-		this.i_userName = this.querySelector('input#user-name')
-		this.b_userSave = this.querySelector('#user-save')
-		if(this.b_userSave) this.b_userSave.addEventListener("OnValidate", this.saveUser.bind(this))
-
 		const debugDiv = this.querySelector('#debug')
 		if(debug && debugDiv) debugDiv.innerHTML = `key:${this.key} sessionID:${this.sessionID}`
 
-		this.updateUi()
+		this.openiFrame()
 
 		// Reload the user from Storage when ready
 		RegisterViewListener('JS_LISTENER_DATASTORAGE', () => this.onDataStoreReady())
 	}
 
 	onDataStoreReady(){
-		const user = this.getUser()
+		console.log('Load state from DataStorage')
+		this.state = this.loadState()
 
-		if(user){
-			// Save globally
-			this.user = user
-
-			// Open the map (the user exists)
-			console.log('User exists, load the map')
-			this.setView('map')
-		}else{
-			console.log('No user in the store => open settings')
-			this.openSettings()
-		}
-
-		// Start sockets
+		console.log('Start telemetry socket')
 		this.telemetryConnection()
-		this.linkerConnection()
 	}
 
-	getUser(){
-		const user = GetStoredData('adv_vfr_user')
-		if(user) return JSON.parse(user)
+	loadState(){
+		const state = GetStoredData('adv_vfr_state')
+		if(state) return JSON.parse(state)
 
-		return {
-			name: ''
-		}
+		return {}
 	}
 
-	saveUser(){
-		this.user = Object.assign({}, this.user, {
-			name: this.i_userName.value
-		})
+	saveState(data){
+		const nextState = Object.assign({}, this.state, data)
+		const value = JSON.stringify(this.state)
 
-		const value = JSON.stringify(this.user)
-		SetStoredData('adv_vfr_user', value)
+		console.log('saveState')
+		console.log(value)
+
+		SetStoredData('adv_vfr_state', value)
+
+		return nextState
 	}
 
 	toggleHidden(){
 		this.planeHidden = this.m_toggleHidden.toggled
 	}
 
-	toggleSettings(){
-		if(this.m_toggleSettings.toggled) return this.setView('settings')
-		this.setView('map')
-	}
-
-	setView(next){
-		this.view = next
-		this.updateUi()
-	}
-
-	updateUi(){
-		if(this.view === 'settings'){
-			this.openSettings()
-			this.closeiFrame()
-		}else
-		if(this.view === 'map'){
-			this.closeSettings()
-			this.openiFrame()
-		}
-	}
-
-	// Helpers
-
-	openSettings(){
-		this.viewUserSettings.style.display = 'block'
-		this.m_toggleSettings.toggled = true
-
-		this.i_userName.value = this.user.name || ''
-	}
-
-	closeSettings(){
-		this.viewUserSettings.style.display = 'none'
-		this.m_toggleSettings.toggled = false
-	}
-
 	openiFrame(){
-		if(!this.iframe) return
+		const iframe = document.querySelector("#CustomPanelIframe")
+		if(!iframe) return
 
-		const url = iFrameServer + `/map/${groupName}?ingame&__v=${version}&session=${this.sessionID}&key=${this.key}`
+		const url = iFrameServer + `/map/${groupName}/?ingame&v_=${version}&session=${this.sessionID}&key=${this.key}`
 		console.log('Open iFrame', url)
 
-		this.iframe.src = url
-		this.iframe.style.display = 'block'
+		iframe.src = url
+		iframe.style.display = 'block'
 	}
 
-	closeiFrame(){
-		if(!this.iframe) return
-		console.log('Close iFrame')
-
-		this.iframe.src = ''
-		this.iframe.style.display = 'none'
+	getUserName(){
+		return this.state.userName || this.randomName
 	}
-
-
 
 	/**
 	 * Telemetry
@@ -239,19 +177,16 @@ class IngamePanelCustomPanel extends HTMLElement {
 		if(alt) alt = alt.toFixed(2)
 
 		let hdg = SimVar.GetSimVarValue("PLANE HEADING DEGREES TRUE", "degree")
-		//if (hdg) { hdg = hdg.toFixed(5) }
+		//if(hdg) hdg = hdg.toFixed(5)
 
 		const speed = SimVar.GetSimVarValue("AIRSPEED INDICATED", "knots")
 
 		let vspeed = SimVar.GetSimVarValue("VERTICAL SPEED", "Feet per second")
 		if(vspeed) vspeed = vspeed.toFixed(2)
 
-		let userName = this.user && this.user.name ? this.user.name : this.randomName
-		userName = userName.substring(0, 9)
-
 		const data = {
 			hidden: this.planeHidden,
-			user: userName,
+			user: this.getUserName(),
 			group: groupName,
 			uuid: this.sessionID,
 			atcModelRaw: atcModel,
@@ -325,40 +260,47 @@ class IngamePanelCustomPanel extends HTMLElement {
 		}
 	}
 
+	linkerSend(data){
+		console.log('Send to linker (DATA)', data)
+		const json = JSON.stringify(data)
+
+		console.log('Send to linker (JSON)', json)
+		this.linker.send(json)
+	}
+
 	handleMsg(msg){
 		console.log('Object MSG')
 		console.log(msg)
 
 		if(msg.type === 'getSimVar') this.getSimVar(msg.id, msg.payload)
 		if(msg.type === 'setSimVar') this.setSimVar(msg.id, msg.payload)
+		if(msg.type === 'subscribeSimVar') this.subscribeSimVar(msg.id, msg.payload)
+		if(msg.type === 'unsubscribeSimVar') this.unsubscribeSimVar(msg.id)
 
-		/*
-		if(msg.type === 'simVarSubscribe') this.simVarSubscribe(msg.payload)*/
+		if(msg.type === 'getState') this.getState(msg.id, msg.payload)
+		if(msg.type === 'setState') this.setState(msg.id, msg.payload)
 	}
+
+	// SimVar
 
 	getSimVar(id, vars){
 		console.log('getSimVar()')
-		/*console.log('id')
+		console.log('id')
 		console.log(id)
+
 		console.log('vars')
-		console.log(vars)*/
+		console.log(vars)
 
 		const values = vars.map(simvar => {
 			const v = SimVar.GetSimVarValue(simvar.name, simvar.unit, simvar.source)
 			return {name: simvar.name, value: v}
 		})
 
-		const msg = {
+		this.linkerSend({
 			id,
 			type: 'getSimVar',
 			payload: values
-		}
-
-		console.log('SEND OBJ', msg)
-		console.log(msg)
-
-		const msgJson = JSON.stringify(msg)
-		this.linker.send(msgJson)
+		})
 	}
 
 	setSimVar(id, vars){
@@ -369,34 +311,14 @@ class IngamePanelCustomPanel extends HTMLElement {
 		console.log('vars')
 		console.log(vars)
 
-		// SetSimVarValue(name, unit, value, dataSource = "")
-
 		vars.forEach(simvar => {
 			const v = SimVar.SetSimVarValue(simvar.name, simvar.unit, simvar.value, simvar.source)
 			return {name: simvar.name, value: v}
 		})
-
-/*
-		const values = vars.map(simvar => {
-
-		})
-
-		const msg = {
-			id,
-			type: 'getSimVar',
-			payload: values
-		}
-
-		console.log('SEND OBJ', msg)
-		console.log(msg)
-
-		const msgJson = JSON.stringify(msg)
-		this.linker.send(msgJson)
-*/
 	}
 
-	simVarSubscribe(conf){
-		const {reply, period, vars} = conf
+	subscribeSimVar(id, msg){
+		const {period, vars} = msg
 
 		const work = () => {
 			const values = vars.map(simvar => {
@@ -405,21 +327,58 @@ class IngamePanelCustomPanel extends HTMLElement {
 			})
 
 			const msg = {
-				type: reply,
+				id,
+				type: 'subscribeSimVar',
 				payload: {
 					hidden: this.planeHidden,
-					user: senderID,
+					user: this.getUserName(),
 					group: groupName,
 					vars: values
 				}
 			}
 
-			const msgJson = JSON.stringify(msg)
-			this.linker.send(msgJson)
+			this.linkerSend(msg)
 		}
 
 		work()
-		setInterval(work, period)
+		this.subscribers[id] = setInterval(work, period)
+	}
+
+	unsubscribeSimVar(id){
+		console.log('Clear interval', id)
+
+		if(!this.subscribers[id]) return
+		clearInterval(this.subscribers[id])
+	}
+
+	// Stae
+
+	getState(id){
+		this.linkerSend({
+			id,
+			type: 'getState',
+			payload: this.state
+		})
+	}
+
+	setState(id, data){
+		console.log('setStorage()')
+
+		console.log('id')
+		console.log(id)
+
+		console.log('data')
+		console.log(data)
+
+		this.state = this.saveState(data)
+
+		//
+
+		this.linkerSend({
+			id,
+			type: 'setState',
+			payload: this.state
+		})
 	}
 
 }
