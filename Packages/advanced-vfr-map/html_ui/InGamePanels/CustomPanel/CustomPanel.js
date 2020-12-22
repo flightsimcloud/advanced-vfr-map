@@ -1,3 +1,7 @@
+//-------------------------------------------------------------------------------------
+// IF YOU EDIT THE CODE BELLOW, A RANDOM KITTEN WILL BE MURDERED ON THE WEB
+//-------------------------------------------------------------------------------------
+
 const atcModelDic = {
 	"TT:ATCCOM.AC_MODEL_A20N.0.text": "A320neo",
 	"TT:ATCCOM.AC_MODEL A5.0.text": "A5",
@@ -27,13 +31,13 @@ const atcModelDic = {
 }
 
 const debug = true
-const version = '0.3.0'
+const version = '0.2.0'
 const groupName = debug ? 'global' : 'global'
 const localIp = '192.168.1.20'
 
 const iFrameServer = debug ? `http://${localIp}:8080` : 'https://flightsim.cloud'
 const linkerServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
-const telemetryServer = false ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
+const telemetryServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
 
 let IngamePanelCustomPanelLoaded = false
 document.addEventListener('beforeunload', () => {
@@ -48,8 +52,8 @@ class IngamePanelCustomPanel extends HTMLElement {
 		this.planeHidden = false
 		this.subscribers = {}
 
-		this.sessionID = debug ? 111 : Date.now()
-		this.key = debug ? '444' : Math.random().toString(36).substring(2, 10)
+		this.sessionID = debug ? 123 : Date.now()
+		this.key = debug ? 456 : Math.random().toString(36).substring(2, 10)
 		this.randomName = Math.random().toString(36).substring(2, 10)
 		this.userName = null
 
@@ -73,13 +77,15 @@ class IngamePanelCustomPanel extends HTMLElement {
 
 		this.openiFrame()
 
-		// Reload the user from Storage when ready
-		RegisterViewListener('JS_LISTENER_DATASTORAGE', () => this.onDataStoreReady())
+		// Reload the state from Storage when ready
+		//RegisterViewListener('JS_LISTENER_DATASTORAGE', () => this.onDataStoreReady())
+		window.document.addEventListener("dataStorageReady", () => this.onDataStoreReady())
 	}
 
 	onDataStoreReady(){
 		console.log('Load state from DataStorage')
 		this.state = this.loadState()
+		console.log(this.state)
 
 		console.log('Start telemetry socket')
 		this.telemetryConnection()
@@ -93,10 +99,9 @@ class IngamePanelCustomPanel extends HTMLElement {
 	}
 
 	saveState(data){
+		console.log('SetStoredData')
 		const nextState = Object.assign({}, this.state, data)
 		const value = JSON.stringify(this.state)
-
-		console.log('saveState')
 		console.log(value)
 
 		SetStoredData('adv_vfr_state', value)
@@ -112,7 +117,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 		const iframe = document.querySelector("#CustomPanelIframe")
 		if(!iframe) return
 
-		const url = iFrameServer + `/map/${groupName}/?ingame&v_=${version}&session=${this.sessionID}&key=${this.key}`
+		const url = iFrameServer + `/map/${groupName}/?ingame&v=${version}&session=${this.sessionID}&key=${this.key}`
 		console.log('Open iFrame', url)
 
 		iframe.src = url
@@ -122,6 +127,8 @@ class IngamePanelCustomPanel extends HTMLElement {
 	getUserName(){
 		return this.state.userName || this.randomName
 	}
+
+
 
 	/**
 	 * Telemetry
@@ -351,7 +358,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 		clearInterval(this.subscribers[id])
 	}
 
-	// Stae
+	// State
 
 	getState(id){
 		this.linkerSend({
