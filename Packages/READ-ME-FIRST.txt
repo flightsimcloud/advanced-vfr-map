@@ -7,17 +7,10 @@ Note for fsBlackBox users: you don't need to launch fsBlackBox to see your plane
 IMPORTANT
 ---------
 
-If you don't want to appear with a random name on the map, you have to set it:
+If you don't want to appear with a random name on the map, click the user icon on the top
+right within the panel and set your username.
 
-- open advanced-vfr-map/html_ui/InGamePanels/CustomPanel/CustomPanel.js
-- at the begining of the file you will see:
-
-    // Set your name
-    let userName = ''
-
-- Enter your name between ''. Example:
-    // Set your name
-    let userName = 'Toorop'
-
+We highly recommend to enter you username while the panel is not docked to the game to avoid
+keys shortcuts to interfere with your key stroke.
 
 Note: avoid special chars and do note use more the 12 chars lenght.

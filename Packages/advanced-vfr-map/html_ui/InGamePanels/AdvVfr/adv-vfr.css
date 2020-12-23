@@ -3,7 +3,7 @@
 }
 
 /** This mixin makes a single line element fit exactly on the Roboto font for easier integration. */
-ingame-ui#CustomPanel {
+ingame-ui#AdvVfrPanel {
   --headerSize: calc(var(--screenHeight) * (75px / 2160));
 
   display:flex;
@@ -15,7 +15,7 @@ ingame-ui#CustomPanel {
   /*border: 2px solid blue !important;*/
 }
 
-  ingame-ui#CustomPanel #CustomPanelWrap {
+  ingame-ui#AdvVfrPanel #AdvVfrPanelWrap {
     --paddingSize: calc(var(--screenHeight) * (20px / 2160));
 
     display: flex;
@@ -31,13 +31,13 @@ ingame-ui#CustomPanel {
     flex: 1 1 auto !important;
   }
 
-    ingame-ui#CustomPanel #CustomPanelWrap iframe {
+    ingame-ui#AdvVfrPanel #AdvVfrPanelWrap iframe {
       border: none !important;
       height: 100%;
       width: 100%;
     }
 
-  ingame-ui#CustomPanel .ingameUiContent {
+  ingame-ui#AdvVfrPanel .ingameUiContent {
     /*border: 2px solid green !important;*/
     display: flex !important;
     flex-direction: column !important;
@@ -50,7 +50,7 @@ ingame-ui#CustomPanel {
     flex: 1 1 auto !important;
   }
 
-  ingame-ui#CustomPanel .ingameUiWrapper {
+  ingame-ui#AdvVfrPanel .ingameUiWrapper {
     /*border: 2px solid yellow !important;*/
     display: flex !important;
     flex-direction: column !important;
@@ -63,7 +63,7 @@ ingame-ui#CustomPanel {
     flex: 1 1 auto !important;
   }
 
-  ingame-ui#CustomPanel #Footer{
+  ingame-ui#AdvVfrPanel #Footer{
     display: flex;
     justify-content: flex-end;
     flex-direction: row;
@@ -76,12 +76,12 @@ ingame-ui#CustomPanel {
     max-height: var(--headerSize);
   }
 
-    ingame-ui#CustomPanel #Footer #debug{
+    ingame-ui#AdvVfrPanel #Footer #debug{
       align-self: center;
       margin-right: 40px;
       text-transform: none;
     }
 
-    ingame-ui#CustomPanel #Footer .text{
+    ingame-ui#AdvVfrPanel #Footer .text{
       font-weight: bold;
     }

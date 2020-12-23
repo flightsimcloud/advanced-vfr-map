@@ -1,6 +1,6 @@
-//-------------------------------------------------------------------------------------
-// IF YOU EDIT THE CODE BELLOW, A RANDOM KITTEN WILL BE MURDERED ON THE WEB
-//-------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
+// IF YOU EDIT THE CODE BELLOW, A RANDOM KITTEN WILL BE MURDERED ON THE WEB: MEOW !
+//---------------------------------------------------------------------------------
 
 const atcModelDic = {
 	"TT:ATCCOM.AC_MODEL_A20N.0.text": "A320neo",
@@ -31,7 +31,7 @@ const atcModelDic = {
 }
 
 const debug = false
-const version = '0.2.0'
+const version = '0.2.2'
 const groupName = debug ? 'global' : 'global'
 const localIp = '192.168.1.20'
 
@@ -39,12 +39,12 @@ const iFrameServer = debug ? `http://${localIp}:8080` : 'https://flightsim.cloud
 const linkerServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
 const telemetryServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
 
-let IngamePanelCustomPanelLoaded = false
+let IngamePanelAdvVfrLoaded = false
 document.addEventListener('beforeunload', () => {
-	IngamePanelCustomPanelLoaded = false
+	IngamePanelAdvVfrLoaded = false
 }, false)
 
-class IngamePanelCustomPanel extends HTMLElement {
+class IngamePanelAdvVfr extends HTMLElement {
 
 	constructor(){
 		super()
@@ -109,7 +109,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 	}
 
 	openiFrame(){
-		const iframe = document.querySelector("#CustomPanelIframe")
+		const iframe = document.querySelector("#AdvVfrIframe")
 		if(!iframe) return
 
 		const url = iFrameServer + `/map/${groupName}/?ingame&v=${version}&session=${this.sessionID}&key=${this.key}`
@@ -372,7 +372,7 @@ class IngamePanelCustomPanel extends HTMLElement {
 		console.log('data')
 		console.log(data)
 
-		this.state = this.saveState(data)
+			this.state = this.saveState(data)
 
 		//
 
@@ -385,5 +385,5 @@ class IngamePanelCustomPanel extends HTMLElement {
 
 }
 
-window.customElements.define("ingamepanel-custom", IngamePanelCustomPanel)
+window.customElements.define("ingamepanel-adv-vfr", IngamePanelAdvVfr)
 checkAutoload()

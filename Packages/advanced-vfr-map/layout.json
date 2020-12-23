@@ -1,29 +1,89 @@
 {
-    "content": [
-        {
-            "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.css",
-            "size": 2377,
-            "date": 132530369751806500
-        },
-        {
-            "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.html",
-            "size": 2166,
-            "date": 132531233312625286
-        },
-        {
-            "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.js",
-            "size": 10317,
-            "date": 132531232096745004
-        },
-        {
-            "path": "html_ui/Textures/Menu/toolbar/ICON_TOOLBAR.svg",
-            "size": 546,
-            "date": 132518330469048328
-        },
-        {
-            "path": "InGamePanels/advanced-vfr-map.spb",
-            "size": 675,
-            "date": 132518201693183054
-        }
-    ]
+  "content": [
+    {
+      "path": ".DS_Store",
+      "size": 6148,
+      "date": 132530147840000000
+    },
+    {
+      "path": ".idea/.gitignore",
+      "size": 98,
+      "date": 132521915440000000
+    },
+    {
+      "path": ".idea/advanced-vfr-map.iml",
+      "size": 458,
+      "date": 132521915850000000
+    },
+    {
+      "path": ".idea/inspectionProfiles/Project_Default.xml",
+      "size": 644,
+      "date": 132521915390000000
+    },
+    {
+      "path": ".idea/misc.xml",
+      "size": 174,
+      "date": 132521915390000000
+    },
+    {
+      "path": ".idea/modules.xml",
+      "size": 284,
+      "date": 132521915850000000
+    },
+    {
+      "path": ".idea/workspace.xml",
+      "size": 2550,
+      "date": 132521937000000000
+    },
+    {
+      "path": "html_ui/.DS_Store",
+      "size": 6148,
+      "date": 132530148530000000
+    },
+    {
+      "path": "html_ui/InGamePanels/.DS_Store",
+      "size": 6148,
+      "date": 132531987800000000
+    },
+    {
+      "path": "html_ui/InGamePanels/AdvVfr/.DS_Store",
+      "size": 8196,
+      "date": 132531949990000000
+    },
+    {
+      "path": "html_ui/InGamePanels/AdvVfr/adv-vfr.css",
+      "size": 2290,
+      "date": 132531983230000000
+    },
+    {
+      "path": "html_ui/InGamePanels/AdvVfr/adv-vfr.html",
+      "size": 2100,
+      "date": 132531983230000000
+    },
+    {
+      "path": "html_ui/InGamePanels/AdvVfr/adv-vfr.js",
+      "size": 9905,
+      "date": 132531985650000000
+    },
+    {
+      "path": "html_ui/Textures/.DS_Store",
+      "size": 6148,
+      "date": 132521914580000000
+    },
+    {
+      "path": "html_ui/Textures/Menu/.DS_Store",
+      "size": 6148,
+      "date": 132521914580000000
+    },
+    {
+      "path": "html_ui/Textures/Menu/toolbar/ICON_TOOLBAR.svg",
+      "size": 546,
+      "date": 132521905820000000
+    },
+    {
+      "path": "InGamePanels/advanced-vfr-map.spb",
+      "size": 666,
+      "date": 132532015211608421
+    }
+  ]
 }

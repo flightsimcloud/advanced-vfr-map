@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/SCSS/common.css" />
-    <link rel="stylesheet" href="CustomPanel.css" />
+    <link rel="stylesheet" href="adv-vfr.css" />
 
     <!--<script src="http://192.168.1.20:9222/scripts/launcher.js" data-origin="debugger"></script>-->
 
@@ -25,17 +25,17 @@
     <link rel="import" href="/templates/ingameUiHeader/ingameUiHeader.html" />
     <link rel="import" href="/templates/NewListButton/NewListButton.html" />
 
-    <script type="text/javascript" src="CustomPanel.js"></script>
+    <script type="text/javascript" src="adv-vfr.js"></script>
 </head>
 
 <body class="border-box">
 
-<ingamepanel-custom>
-    <ingame-ui id="CustomPanel" panel-id="PANEL_CUSTOM_PANEL" title="Advanced VFR Map"
+<ingamepanel-adv-vfr>
+    <ingame-ui id="AdvVfrPanel" panel-id="PANEL_ADV_VFR" title="Advanced VFR Map"
                class="ingameUiFrame panelInvisible" content-fit="true" min-width="160" min-height="90">
 
-        <section id="CustomPanelWrap">
-            <iframe id="CustomPanelIframe" src=""></iframe>
+        <section id="AdvVfrPanelWrap">
+            <iframe id="AdvVfrIframe" src=""></iframe>
         </section>
 
         <section id="Footer">
@@ -44,7 +44,7 @@
         </section>
 
     </ingame-ui>
-</ingamepanel-custom>
+</ingamepanel-adv-vfr>
 
 </body>
 </html>
