@@ -30,7 +30,7 @@ const atcModelDic = {
 	"TT:ATCCOM.AC_MODEL_TBM9.0.text": "TBM 930"
 }
 
-const debug = true
+const debug = false
 const version = '0.2.0'
 const groupName = debug ? 'global' : 'global'
 const localIp = '192.168.1.20'
@@ -48,24 +48,19 @@ class IngamePanelCustomPanel extends HTMLElement {
 
 	constructor(){
 		super()
-
 		this.planeHidden = false
 		this.subscribers = {}
-
 		this.sessionID = debug ? 123 : Date.now()
 		this.key = debug ? 456 : Math.random().toString(36).substring(2, 10)
 		this.randomName = Math.random().toString(36).substring(2, 10)
 		this.userName = null
-
 		this.state = {}
 	}
 
 	connectedCallback(){
 		console.log('connectedCallback')
-
 		console.log('Start Linker socket')
 		this.linkerConnection()
-
 		this.m_toggleHidden = this.querySelector("#ToggleHidden")
 		if(this.m_toggleHidden){
 			this.m_toggleHidden.toggled = false

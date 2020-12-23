@@ -2,18 +2,18 @@
     "content": [
         {
             "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.css",
-            "size": 1538,
-            "date": 132516486720000000
+            "size": 2377,
+            "date": 132530369751806500
         },
         {
             "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.html",
-            "size": 1712,
-            "date": 132517493944452970
+            "size": 2166,
+            "date": 132531233312625286
         },
         {
             "path": "html_ui/InGamePanels/CustomPanel/CustomPanel.js",
-            "size": 4223,
-            "date": 132518960146508658
+            "size": 10317,
+            "date": 132531232096745004
         },
         {
             "path": "html_ui/Textures/Menu/toolbar/ICON_TOOLBAR.svg",
