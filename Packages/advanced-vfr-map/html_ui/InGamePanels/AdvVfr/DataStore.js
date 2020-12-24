@@ -5,7 +5,7 @@ Include.addScript("/JS/dataStorage.js");
 
 class DataStore {
     static get(key, defaultVal) {
-        const val = GetStoredData(`ADV_${key}`);
+        const val = GetStoredData(`ADVVFR_${key}`);
         if (!val) {
             return defaultVal;
         }
@@ -13,6 +13,6 @@ class DataStore {
     }
 
     static set(key, val) {
-        SetStoredData(`A32NX_${key}`, val);
+        SetStoredData(`ADVVFR_${key}`, val);
     }
 }

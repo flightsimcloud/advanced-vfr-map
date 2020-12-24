@@ -7,18 +7,18 @@
         },
         {
             "path": "html_ui/InGamePanels/AdvVfr/adv-vfr.html",
-            "size": 2245,
-            "date": 132532761802409008
+            "size": 2243,
+            "date": 132532770870702930
         },
         {
             "path": "html_ui/InGamePanels/AdvVfr/adv-vfr.js",
-            "size": 10369,
-            "date": 132532764319857684
+            "size": 10473,
+            "date": 132532838109547248
         },
         {
             "path": "html_ui/InGamePanels/AdvVfr/DataStore.js",
-            "size": 323,
-            "date": 132532757774052958
+            "size": 483,
+            "date": 132532780494273136
         },
         {
             "path": "html_ui/Textures/Menu/toolbar/ICON_TOOLBAR.svg",

@@ -39,10 +39,17 @@ const iFrameServer = debug ? `http://${localIp}:8080` : 'https://flightsim.cloud
 const linkerServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
 const telemetryServer = debug ? `ws://${localIp}:1816` : 'wss://flightsim.cloud'
 
+// global state
+let state = {}
+
 let IngamePanelAdvVfrLoaded = false
 document.addEventListener('beforeunload', () => {
 	IngamePanelAdvVfrLoaded = false
+	const value = JSON.stringify(state)
+	DataStore.set('state', value)
 }, false)
+
+
 
 class IngamePanelAdvVfr extends HTMLElement {
 
@@ -54,7 +61,7 @@ class IngamePanelAdvVfr extends HTMLElement {
 		this.key = debug ? 456 : Math.random().toString(36).substring(2, 10)
 		this.randomName = Math.random().toString(36).substring(2, 10)
 		this.userName = null
-		this.state = {}
+		//this.state = {}
 	}
 
 	connectedCallback(){
@@ -74,34 +81,34 @@ class IngamePanelAdvVfr extends HTMLElement {
 
 		// Reload the state from Storage when ready
 		//RegisterViewListener('JS_LISTENER_DATASTORAGE', () => this.onDataStoreReady())
-		//window.document.addEventListener("dataStorageReady", () => this.onDataStoreReady())
+		window.document.addEventListener("dataStorageReady", () => this.onDataStoreReady())
 
 		// assume datastore is ready (it should be...)
-		this.onDataStoreReady()
+		//this.onDataStoreReady()
 		//setTimeout(this.onDataStoreReady, 2000);
 
 	}
 
 	onDataStoreReady(){
 		console.log('Load state from DataStorage')
-		this.state = this.loadState()
-		console.log(this.state)
+		state = this.loadState()
+		console.log(state)
 		console.log('Start telemetry socket')
 		this.telemetryConnection()
 	}
 
 	loadState(){
-		const state = DataStore.get('adv_vfr_state',{})
+		const state = DataStore.get('state',{})
 		if(state) return JSON.parse(state)
 		return {}
 	}
 
 	saveState(data){
 		console.log('SetStoredData')
-		const nextState = Object.assign({}, this.state, data)
-		const value = JSON.stringify(this.state)
+		const nextState = Object.assign({}, state, data)
+		const value = JSON.stringify(state)
 		console.log(value)
-		DataStore.set('adv_vfr_state', value)
+		DataStore.set('state', value)
 		return nextState
 	}
 
@@ -121,7 +128,7 @@ class IngamePanelAdvVfr extends HTMLElement {
 	}
 
 	getUserName(){
-		return this.state.userName || this.randomName
+		return state.userName || this.randomName
 	}
 
 
@@ -360,7 +367,7 @@ class IngamePanelAdvVfr extends HTMLElement {
 		this.linkerSend({
 			id,
 			type: 'getState',
-			payload: this.state
+			payload: state
 		})
 	}
 
@@ -373,14 +380,14 @@ class IngamePanelAdvVfr extends HTMLElement {
 		console.log('data')
 		console.log(data)
 
-			this.state = this.saveState(data)
+			state = this.saveState(data)
 
 		//
 
 		this.linkerSend({
 			id,
 			type: 'setState',
-			payload: this.state
+			payload: state
 		})
 	}
 
