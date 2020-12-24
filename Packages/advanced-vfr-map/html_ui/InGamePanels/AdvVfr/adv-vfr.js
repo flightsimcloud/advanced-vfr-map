@@ -74,22 +74,25 @@ class IngamePanelAdvVfr extends HTMLElement {
 
 		// Reload the state from Storage when ready
 		//RegisterViewListener('JS_LISTENER_DATASTORAGE', () => this.onDataStoreReady())
-		window.document.addEventListener("dataStorageReady", () => this.onDataStoreReady())
+		//window.document.addEventListener("dataStorageReady", () => this.onDataStoreReady())
+
+		// assume datastore is ready (it should be...)
+		this.onDataStoreReady()
+		//setTimeout(this.onDataStoreReady, 2000);
+
 	}
 
 	onDataStoreReady(){
 		console.log('Load state from DataStorage')
 		this.state = this.loadState()
 		console.log(this.state)
-
 		console.log('Start telemetry socket')
 		this.telemetryConnection()
 	}
 
 	loadState(){
-		const state = GetStoredData('adv_vfr_state')
+		const state = DataStore.get('adv_vfr_state',{})
 		if(state) return JSON.parse(state)
-
 		return {}
 	}
 
@@ -98,9 +101,7 @@ class IngamePanelAdvVfr extends HTMLElement {
 		const nextState = Object.assign({}, this.state, data)
 		const value = JSON.stringify(this.state)
 		console.log(value)
-
-		SetStoredData('adv_vfr_state', value)
-
+		DataStore.set('adv_vfr_state', value)
 		return nextState
 	}
 
